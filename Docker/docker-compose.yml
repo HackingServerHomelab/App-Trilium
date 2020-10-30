@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  trilium:
+    image: zadam/trilium:latest
+    container_name: trilium
+    hostname: trilium
+    restart: unless-stopped
+    volumes:
+      - ../Data/trilium:/root/trilium-data
+    labels:
+      # Traefik Labels
+      - "traefik.enable=true"
+      # HTTPS Labels
+      - "traefik.http.routers.trilium.rule=Host(`localhost`)" # Domain Name
+      - "traefik.http.routers.trilium.entrypoints=web-secure"
+      - "traefik.http.routers.trilium.service=trilium"
+      - "traefik.http.routers.trilium.tls=true"
+      - "traefik.http.services.trilium.loadbalancer.server.port=8080" # Proxied Port
